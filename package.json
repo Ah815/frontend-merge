@@ -1,5 +1,5 @@
 {
-  "name": "foodly_react_native",
+  "name": "Avian_Family",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -14,8 +14,9 @@
     "@react-navigation/material-top-tabs": "^6.6.4",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.14",
-    "axios": "^1.5.1",
+    "axios": "^1.7.3",
     "expo": "^51.0.20",
+    "expo-image-picker": "^15.0.7",
     "expo-linear-gradient": "~13.0.2",
     "expo-location": "~17.0.1",
     "expo-splash-screen": "^0.27.5",
