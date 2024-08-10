@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "../context/UserContext";
 import { COLORS } from "../constants/theme";
 
-const VendorRegistrationPage = ({navigation}) => {
+const VendorRegistrationPage = ({ navigation }) => {
   const { user } = useContext(UserContext);
   const [loader, setLoader] = useState(false);
 
@@ -36,11 +36,33 @@ const VendorRegistrationPage = ({navigation}) => {
     products: Yup.array().of(Yup.string()).nullable(),
   });
 
+  // Function to make vendor request
+  const makeVendorRequest = async () => {
+    try {
+      const bToken = await AsyncStorage.getItem("token");
+      const endpoint =
+        "https://store-backend-sage.vercel.app/api/vendors/makeVendor";
+      const response = await axios.post(
+        endpoint,
+        { userId: user._id },
+        {
+          headers: {
+            Authorization: `Bearer ${bToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
   // Function to handle form submission
   const addVendorRequest = async (values) => {
     setLoader(true);
     try {
-      const endpoint = "https://store-backend-sage.vercel.app/api/vendors/addVendor";
       const bToken = await AsyncStorage.getItem("token");
 
       if (!bToken) {
@@ -49,15 +71,25 @@ const VendorRegistrationPage = ({navigation}) => {
         return;
       }
 
+      const makeVendorResponse = await makeVendorRequest();
+      if (!makeVendorResponse) {
+        Alert.alert("Error", "Error in making user type vendor");
+        setLoader(false);
+        return;
+      }
+
+      const endpoint =
+        "https://store-backend-sage.vercel.app/api/vendors/addVendor";
       const response = await axios.post(endpoint, values, {
         headers: {
           Authorization: `Bearer ${bToken}`,
+          "Content-Type": "application/json",
         },
       });
 
       if (response.status === 200) {
         Alert.alert("Success", "Vendor added successfully");
-        navigation.navigate("shopDetails")
+        navigation.navigate("shopDetails");
       } else {
         Alert.alert("Error", "Failed to register vendor. Please try again.");
       }
@@ -164,16 +196,21 @@ const VendorRegistrationPage = ({navigation}) => {
           <Text style={styles.label}>Products (comma-separated)</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => setFieldValue("products", text.split(',').map(item => item.trim()))}
+            onChangeText={(text) =>
+              setFieldValue(
+                "products",
+                text.split(",").map((item) => item.trim())
+              )
+            }
             onBlur={handleBlur("products")}
-            value={values.products.join(', ')}
+            value={values.products.join(", ")}
           />
           {errors.products && touched.products && (
             <Text style={styles.errorText}>{errors.products}</Text>
           )}
 
           <TouchableOpacity
-            onPress={handleSubmit }
+            onPress={handleSubmit}
             style={[styles.button, loader && styles.buttonDisabled]}
             disabled={loader}
           >
@@ -220,8 +257,7 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: "#ccc", // Light gray when disabled
-  }
+  },
 });
-
 
 export default VendorRegistrationPage;
