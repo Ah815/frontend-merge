@@ -37,37 +37,34 @@ const VendorShopDetail = () => {
 
       {vendors.length > 0 ? (
         vendors.map((vendor, index) => (
-          <View key={index} style={styles.section}>
-            <Text style={styles.label}>Title:</Text>
-            <Text style={styles.value}>{vendor.title}</Text>
+          <View key={index} style={styles.vendorCard}>
+            <View style={styles.vendorInfo}>
+              <Text style={styles.vendorTitle}>{vendor.title}</Text>
+              <Text style={styles.vendorTime}>{vendor.time}</Text>
+              <Text style={styles.vendorRating}>
+                Rating: {vendor.rating} ({vendor.ratingCount} reviews)
+              </Text>
+            </View>
+            <View style={styles.vendorDetails}>
+              <Text style={styles.detailLabel}>Products:</Text>
+              <Text style={styles.detailValue}>
+                {vendor.products?.length > 0
+                  ? vendor.products.join(", ")
+                  : "No products available"}
+              </Text>
 
-            <Text style={styles.label}>Time:</Text>
-            <Text style={styles.value}>{vendor.time}</Text>
+              <Text style={styles.detailLabel}>Pickup:</Text>
+              <Text style={styles.detailValue}>{vendor.pickup ? "Yes" : "No"}</Text>
 
-            <Text style={styles.label}>Products:</Text>
-            <Text style={styles.value}>
-              {vendor.products?.length > 0
-                ? vendor.products.join(", ")
-                : "No products available"}
-            </Text>
+              <Text style={styles.detailLabel}>Delivery:</Text>
+              <Text style={styles.detailValue}>{vendor.delivery ? "Yes" : "No"}</Text>
 
-            <Text style={styles.label}>Pickup:</Text>
-            <Text style={styles.value}>{vendor.pickup ? "Yes" : "No"}</Text>
+              <Text style={styles.detailLabel}>Owner:</Text>
+              <Text style={styles.detailValue}>{vendor.owner}</Text>
 
-            <Text style={styles.label}>Address:</Text>
-            <Text style={styles.value}>{vendor.address}</Text>
-
-            <Text style={styles.label}>Delivery:</Text>
-            <Text style={styles.value}>{vendor.delivery ? "Yes" : "No"}</Text>
-
-            <Text style={styles.label}>Owner:</Text>
-            <Text style={styles.value}>{vendor.owner}</Text>
-
-            <Text style={styles.label}>Rating:</Text>
-            <Text style={styles.value}>{vendor.rating}</Text>
-
-            <Text style={styles.label}>Rating Count:</Text>
-            <Text style={styles.value}>{vendor.ratingCount}</Text>
+              <Text style={styles.detailLabel}>Address:</Text>
+              <Text style={styles.detailValue}>{vendor.address}</Text>
+            </View>
           </View>
         ))
       ) : (
@@ -82,41 +79,60 @@ const VendorShopDetail = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f0f0f0", // Light gray background
   },
   headerContainer: {
-    backgroundColor: "#6200EE",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
+    alignItems: "center",
+    marginBottom: 20,
   },
   header: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
-    textAlign: "center",
+  },
+  vendorCard: {
+    padding: 15,
+    margin: 10,
+    backgroundColor: "#fff", // White background for the content
+    borderRadius: 10,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2, // Shadow effect
+  },
+  vendorInfo: {
+    marginBottom: 10,
+  },
+  vendorTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  vendorTime: {
+    fontSize: 16,
+    color: "#aaa",
+  },
+  vendorRating: {
+    fontSize: 14,
+    color: "#aaa",
+  },
+  vendorDetails: {
+    // No specific styles needed here
+  },
+  detailLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  detailValue: {
+    fontSize: 16,
+    marginBottom: 10,
   },
   section: {
-    backgroundColor: "#fff",
-    padding: 16,
-    marginBottom: 12,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4,
+    alignItems: "center",
+    marginTop: 20,
   },
   value: {
     fontSize: 16,
-    color: "#666",
   },
 });
 
