@@ -74,23 +74,38 @@
 //   );
 // }
 
-
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, FlatList, ActivityIndicator, StyleSheet } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Button,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "../../context/UserContext";
 
 export default function AllVendors({ navigation }) {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
 
   const getVendors = async () => {
+    console.log("get vendors fired", user);
     try {
       const endpoint =
         "https://store-backend-sage.vercel.app/api/vendors/getVendors";
       const response = await axios.get(endpoint);
-      console.log("Vendors response:", response.data);
-      setVendors(response.data.vendors);
+      console.log("Vendors response:\n", response.data.vendors);
+      console.log(`filtered data`);
+      const filteredResponse = response.data.vendors.filter(
+        (elem) => elem.userId === user._id
+      );
+      user.userType === "Admin"
+        ? setVendors(response.data.vendors)
+        : setVendors(filteredResponse);
     } catch (error) {
       console.log("Error fetching vendors:", error);
     } finally {
@@ -125,7 +140,9 @@ export default function AllVendors({ navigation }) {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />;
+    return (
+      <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />
+    );
   }
 
   return (
