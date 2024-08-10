@@ -125,7 +125,8 @@ const VendorRegistrationPage = ({ navigation }) => {
         setFieldValue,
       }) => (
         <ScrollView style={styles.container}>
-          <Text style={styles.label}>Title</Text>
+          <Text style={styles.header}>Vendor Registration</Text>
+          <Text style={styles.label}>Vendor</Text>
           <TextInput
             style={styles.input}
             onChangeText={handleChange("title")}
@@ -192,12 +193,12 @@ const VendorRegistrationPage = ({ navigation }) => {
           {errors.rating && touched.rating && (
             <Text style={styles.errorText}>{errors.rating}</Text>
           )}
-
+{/* 
           <Text style={styles.label}>Products (comma-separated)</Text>
           <TextInput
             style={styles.input}
             onChangeText={(text) =>
-              setFieldValue(
+              setFieldValue(ws
                 "products",
                 text.split(",").map((item) => item.trim())
               )
@@ -207,7 +208,7 @@ const VendorRegistrationPage = ({ navigation }) => {
           />
           {errors.products && touched.products && (
             <Text style={styles.errorText}>{errors.products}</Text>
-          )}
+          )} */}
 
           <TouchableOpacity
             onPress={handleSubmit}
@@ -229,6 +230,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  header:{
+    fontSize: 24,
+    marginBottom: 40,
+    fontWeight: "bold",
+  },
+  
   label: {
     fontSize: 16,
     marginBottom: 10,

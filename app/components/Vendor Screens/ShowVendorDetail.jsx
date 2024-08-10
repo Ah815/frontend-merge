@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import axios from "axios";
 import { UserContext } from "../../context/UserContext";
+import Button from "../Button";
+import { COLORS } from "../../constants/theme";
 
-const VendorShopDetail = () => {
+const VendorShopDetail = ({navigation}) => {
   const { user } = useContext(UserContext);
   const [vendors, setVendors] = useState([]);
 
@@ -14,9 +16,10 @@ const VendorShopDetail = () => {
         "https://store-backend-sage.vercel.app/api/vendors/getVendors";
       const response = await axios.get(endpoint);
       const allVendors = response.data.vendors;
-      const filteredResponse = user.userType === "Admin"
-        ? allVendors
-        : allVendors.filter((elem) => elem.userId === user._id);
+      const filteredResponse =
+        user.userType === "Admin"
+          ? allVendors
+          : allVendors.filter((elem) => elem.userId === user._id);
 
       setVendors(filteredResponse);
     } catch (error) {
@@ -52,12 +55,22 @@ const VendorShopDetail = () => {
                   ? vendor.products.join(", ")
                   : "No products available"}
               </Text>
+              <View>
+                <Button onPress={() => navigation.navigate('addProduct')}
+                 style={styles.button}
+                  title={`add product`}
+                ></Button>
+              </View>
 
               <Text style={styles.detailLabel}>Pickup:</Text>
-              <Text style={styles.detailValue}>{vendor.pickup ? "Yes" : "No"}</Text>
+              <Text style={styles.detailValue}>
+                {vendor.pickup ? "Yes" : "No"}
+              </Text>
 
               <Text style={styles.detailLabel}>Delivery:</Text>
-              <Text style={styles.detailValue}>{vendor.delivery ? "Yes" : "No"}</Text>
+              <Text style={styles.detailValue}>
+                {vendor.delivery ? "Yes" : "No"}
+              </Text>
 
               <Text style={styles.detailLabel}>Owner:</Text>
               <Text style={styles.detailValue}>{vendor.owner}</Text>
@@ -88,6 +101,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 40,
   },
   vendorCard: {
     padding: 15,
@@ -134,6 +148,12 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
   },
+  button: {
+    backgroundColor: COLORS.primary,
+    padding: 15,
+    borderRadius: 5,
+  },
+  
 });
 
 export default VendorShopDetail;

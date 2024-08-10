@@ -23,6 +23,7 @@ import VendorRegistrationPage from "./app/components/VendorRegistrationPage";
 import AllVendors from "./app/components/Vendor Screens/AllVendors";
 import UpdateVendorForm from "./app/components/Vendor Screens/UpdateVendor";
 import VendorShopDetail from "./app/components/Vendor Screens/ShowVendorDetail";
+import AddProduct from "./app/components/Product/AddProduct";
 // import Vendor from "./app/screens/vendor/Vendor";
 
 const Stack = createNativeStackNavigator();
@@ -135,6 +136,11 @@ export default function App() {
                       <Stack.Screen
                       name="shopDetails"
                       component={VendorShopDetail}
+                      options={{ headerShown: false }}
+                    />
+                      <Stack.Screen
+                      name="addProduct"
+                      component={AddProduct}
                       options={{ headerShown: false }}
                     />
                     <Stack.Screen

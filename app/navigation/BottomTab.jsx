@@ -10,6 +10,7 @@ import Cart from "../screens/Cart";
 import { CartCountContext } from "../context/CartCountContext";
 import { LoginContext } from "../context/LoginContext";
 import LoginPage from "../screens/LoginPage";
+import UploadImage from "../components/Image Upload/UploadImage";
 
 const Tab = createBottomTabNavigator();
 
@@ -114,6 +115,7 @@ const BottomTab = () => {
       <Tab.Screen
         name="Profile"
         component={login ? Profile : LoginPage}
+        // component={UploadImage}
         options={{
           tabBarStyle: tabBarStyle,
           tabBarShowLabel: false,
