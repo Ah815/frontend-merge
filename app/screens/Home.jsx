@@ -61,8 +61,7 @@ const Home = () => {
                 <NewFoodList />
 
                 <Divider />
-                <Heading heading={"Vendor nearest to you"} onPress={() => {}} />
-                <FastestNearYou />
+                {/* <Heading heading={"Vendor nearest to you"}  */}
               </View>
             )}
           </ScrollView>

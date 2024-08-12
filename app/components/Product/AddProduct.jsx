@@ -9,6 +9,7 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  ActivityIndicator, // Import ActivityIndicator for the loader
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -31,9 +32,12 @@ const validationSchema = Yup.object().shape({
 
 const AddProduct = () => {
   const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   // Function to pick image from gallery
   const pickImage = async () => {
+    setLoading(true); // Start loading
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -41,9 +45,13 @@ const AddProduct = () => {
       quality: 1,
     });
 
+    setLoading(false); // Stop loading
+
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
       uploadImage(result.assets[0].uri);
+    } else {
+      Alert.alert("No Image Selected", "You did not select an image.");
     }
   };
 
@@ -166,12 +174,20 @@ const AddProduct = () => {
             <TouchableOpacity style={styles.button} onPress={pickImage}>
               <Text style={styles.buttonText}>Pick an image from gallery</Text>
             </TouchableOpacity>
-            
+
+            {loading && (
+              <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color="#3498db" />
+              </View>
+            )}
+
             {imageUri && (
               <Image source={{ uri: imageUri }} style={styles.image} />
             )}
-            
-            <Button style={styles.button} onPress={handleSubmit} title="Submit" />
+
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
           </>
         )}
       </Formik>
@@ -240,18 +256,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     alignItems: "center",
-  },
-  buttonText: {
-    color: "#ffffff", // White text color for buttons
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  button: {
-    backgroundColor: "#3498db", // Bright blue background
-    paddingVertical: 15, // Vertical padding for button height
-    borderRadius: 10, // Rounded corners
-    marginVertical: 10, // Margin between buttons
-    alignItems: "center", // Center text horizontally
     elevation: 3, // Shadow for Android
     shadowColor: "#000", // Shadow color for iOS
     shadowOffset: { width: 0, height: 2 },
@@ -259,9 +263,13 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   buttonText: {
-    color: "#ffffff", // White text color
-    fontSize: 16, // Font size
-    fontWeight: "600", // Semi-bold font weight
+    color: "#ffffff", // White text color for buttons
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  loaderContainer: {
+    marginVertical: 20,
+    alignItems: "center",
   },
 });
 

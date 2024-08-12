@@ -1,25 +1,31 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import uidata from "../constants/uidata";
 import { COLORS } from "../constants/theme";
 
-const ChoicesList = ({setSelectedChoice, setSelectedSlection}) => {
+const ChoicesList = ({ setSelectedChoice, setSelectedSlection }) => {
   const [selected, setSelected] = useState(null);
 
-  const handelPress = (item) =>{
-    if(selected === item.value) {
-      setSelected(null)
-      setSelectedChoice(null)
-      setSelectedSlection(null)
-    } else{
-      setSelected(item.value)
-      setSelectedChoice(item.value)
-      setSelectedSlection("vendors")
+  const handelPress = (item) => {
+    if (selected === item.value) {
+      setSelected(null);
+      setSelectedChoice(null);
+      setSelectedSlection(null);
+    } else {
+      setSelected(item.value);
+      setSelectedChoice(item.value);
+      setSelectedSlection("vendors");
     }
-  }
+  };
   return (
     <View>
-      <Text
+      {/* <Text
         style={{
           margin: 16,
           marginVertical: 8,
@@ -59,7 +65,7 @@ const ChoicesList = ({setSelectedChoice, setSelectedSlection}) => {
           
           
         )}
-      />
+      /> */}
     </View>
   );
 };

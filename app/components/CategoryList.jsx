@@ -33,18 +33,19 @@ const CategoryList = ({
   };
 
   return (
-    <FlatList
-      data={uidata.categories}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      style={{ marginTop: 8 }}
-      keyExtractor={(item) => item._id}
-      renderItem={({ item }) => (
-        <TouchableOpacity onPress={()=> handelSelectedCategory(item)}>
-          <CategoryItem selected={selected} category={item} />
-        </TouchableOpacity>
-      )}
-    />
+    <View></View>
+    // <FlatList
+    //   data={uidata.categories}
+    //   showsHorizontalScrollIndicator={false}
+    //   horizontal
+    //   style={{ marginTop: 8 }}
+    //   keyExtractor={(item) => item._id}
+    //   renderItem={({ item }) => (
+    //     <TouchableOpacity onPress={()=> handelSelectedCategory(item)}>
+    //       <CategoryItem selected={selected} category={item} />
+    //     </TouchableOpacity>
+    //   )}
+    // />
   );
 };
 
