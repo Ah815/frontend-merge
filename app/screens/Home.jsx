@@ -15,6 +15,7 @@ import Divider from "../components/Divider";
 import NewFoodList from "../components/NewFoodList";
 import FastestNearYou from "../components/FastestNearYou";
 import HomeCategories from "../components/HomeCategories";
+import VendorList from "../components/Vendor Screens/ShowAllVendorsToUser";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -58,7 +59,8 @@ const Home = () => {
                 <NearByVendors />
                 <Divider /> 
                 <Heading heading={"Try a new vendors"} onPress={() => {}} />
-                <NewFoodList />
+                {/* <NewFoodList /> */}
+                <VendorList/>
 
                 <Divider />
                 {/* <Heading heading={"Vendor nearest to you"}  */}

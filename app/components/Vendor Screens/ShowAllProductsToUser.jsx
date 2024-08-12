@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -8,9 +8,12 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
+import NetworkImage from "../NetworkImage";
+import { SIZES } from "../../constants/theme";
+import { CartContext } from "../../context/CartContext";
 
 const ProductsList = ({ navigation }) => {
-  const [products, setProducts] = useState([]); // Correct state variable name
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const route = useRoute();
@@ -21,9 +24,9 @@ const ProductsList = ({ navigation }) => {
     try {
       const response = await axios.get(
         `https://store-backend-sage.vercel.app/api/products/getProducts/${vendorId}`
-      ); // Adjust URL as needed
+      );
       console.log("Fetched products:", response.data);
-      setProducts(response.data.products); // Use setProducts to update state
+      setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
       setError("Failed to load products");
@@ -36,19 +39,32 @@ const ProductsList = ({ navigation }) => {
     fetchProducts();
   }, [vendorId]);
 
+  const { addToCart } = useContext(CartContext);
+
+  // Function to handle adding the item to the cart
+  const handleAddToCart = (item) => {
+    console.log("Adding to cart:", item); // Log item details
+    addToCart(item); // Add item to cart
+  };
+
   // Render individual product item
   const renderProductItem = ({ item }) => (
     <View style={styles.productCard}>
+      <NetworkImage
+        data={item.imageUrl}
+        width={SIZES.width - 80}
+        height={SIZES.height / 5.8}
+        radius={16}
+        mode={"cover"}
+      />
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.info}>Price: ${item.price}</Text>
       <Text style={styles.info}>Description: {item.description}</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-          navigation.navigate("ProductDetail", { productId: item._id });
-        }}
+        onPress={() => handleAddToCart(item)}
       >
-        <Text style={styles.buttonText}>View Details</Text>
+        <Text style={styles.buttonText}>Add to Cart</Text>
       </TouchableOpacity>
     </View>
   );
@@ -73,8 +89,8 @@ const ProductsList = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   listContainer: {
+    paddingHorizontal: 15,
     paddingVertical: 10,
-    paddingHorizontal: 15, // Added horizontal padding for better layout
   },
   productCard: {
     backgroundColor: "#fff",
@@ -86,25 +102,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    width: '100%', // Adjusted width to fit the container
-    maxWidth: 300, // Max width to ensure card size consistency
+    width: "100%", // Ensure the card takes the full width of the container
   },
   title: {
-    fontSize: 18, // Increased font size for better readability
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
   },
   info: {
     fontSize: 14,
-    marginBottom: 6, // Increased margin for spacing between lines
+    marginBottom: 6,
     color: "#333",
   },
   button: {
     marginTop: 10,
-    backgroundColor: "#007bff",
+    backgroundColor: "#28a745", // Green color for 'Add to Cart'
     borderRadius: 8,
-    paddingVertical: 12, // Increased padding for better touch area
-    paddingHorizontal: 20, // Increased horizontal padding for better appearance
+    paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   buttonText: {
     color: "#fff",

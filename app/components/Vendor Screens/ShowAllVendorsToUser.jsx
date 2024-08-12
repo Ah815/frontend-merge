@@ -7,48 +7,57 @@ import {
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
-const ProductsList = ({ navigation }) => {
-  const [products, setProducts] = useState([]); // Correct state variable name
+const VendorList = () => {
+  const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const route = useRoute();
-  const { vendorId } = route.params;
 
-  // Fetch products data from API
-  const fetchProducts = async () => {
+  // Navigation hook
+  const navigation = useNavigation();
+
+  // Fetch vendor data from API
+  const fetchVendors = async () => {
     try {
       const response = await axios.get(
-        `https://store-backend-sage.vercel.app/api/products/getProducts/${vendorId}`
+        "https://store-backend-sage.vercel.app/api/vendors/getVendors"
       ); // Adjust URL as needed
-      console.log("Fetched products:", response.data);
-      setProducts(response.data.products); // Use setProducts to update state
+      console.log(response.data.vendors)
+      setVendors(response.data.vendors); // Adjust according to your API response structure
     } catch (error) {
-      console.error("Error fetching products:", error);
-      setError("Failed to load products");
+      console.error("Error fetching vendors:", error);
+      setError("Failed to load vendors");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [vendorId]);
+    fetchVendors();
+  }, []);
 
-  // Render individual product item
-  const renderProductItem = ({ item }) => (
-    <View style={styles.productCard}>
+  // Render individual vendor item
+  const renderVendorItem = ({ item }) => (
+    <View style={styles.vendorCard}>
       <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.info}>Price: ${item.price}</Text>
-      <Text style={styles.info}>Description: {item.description}</Text>
+      <Text style={styles.info}>Address: {item.address}</Text>
+      <Text style={styles.info}>
+        Pickup Available: {item.pickup ? "Yes" : "No"}
+      </Text>
+      <Text style={styles.info}>
+        Delivery Available: {item.delivery ? "Yes" : "No"}
+      </Text>
+      <Text style={styles.info}>
+        Rating: {item.rating} ({item.ratingCount} ratings)
+      </Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          navigation.navigate("ProductDetail", { productId: item._id });
+          navigation.navigate("ProductsListPage", { vendorId: item._id });
         }}
       >
-        <Text style={styles.buttonText}>View Details</Text>
+        <Text style={styles.buttonText}>Show Products</Text>
       </TouchableOpacity>
     </View>
   );
@@ -63,10 +72,12 @@ const ProductsList = ({ navigation }) => {
 
   return (
     <FlatList
-      data={products}
+      horizontal
+      data={vendors}
       keyExtractor={(item) => item._id}
-      renderItem={renderProductItem}
+      renderItem={renderVendorItem}
       contentContainerStyle={styles.listContainer}
+      showsHorizontalScrollIndicator={false}
     />
   );
 };
@@ -74,37 +85,35 @@ const ProductsList = ({ navigation }) => {
 const styles = StyleSheet.create({
   listContainer: {
     paddingVertical: 10,
-    paddingHorizontal: 15, // Added horizontal padding for better layout
   },
-  productCard: {
+  vendorCard: {
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 15,
-    marginBottom: 15,
+    marginHorizontal: 10,
     elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    width: '100%', // Adjusted width to fit the container
-    maxWidth: 300, // Max width to ensure card size consistency
+    width: 250, // Fixed width to ensure consistent card size in horizontal list
   },
   title: {
-    fontSize: 18, // Increased font size for better readability
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 8,
   },
   info: {
     fontSize: 14,
-    marginBottom: 6, // Increased margin for spacing between lines
+    marginBottom: 4,
     color: "#333",
   },
   button: {
     marginTop: 10,
     backgroundColor: "#007bff",
     borderRadius: 8,
-    paddingVertical: 12, // Increased padding for better touch area
-    paddingHorizontal: 20, // Increased horizontal padding for better appearance
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   buttonText: {
     color: "#fff",
@@ -124,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductsList;
+export default VendorList;

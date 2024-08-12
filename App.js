@@ -26,6 +26,8 @@ import VendorShopDetail from "./app/components/Vendor Screens/ShowVendorDetail";
 import AddProduct from "./app/components/Product/AddProduct";
 import ProductsPage from "./app/components/Product/ProductsPage";
 import UpdateProduct from "./app/components/Product/UpdateProductPage";
+import { CartContext } from "./app/context/CartContext";
+import ProductsList from "./app/components/Vendor Screens/ShowAllProductsToUser";
 // import Vendor from "./app/screens/vendor/Vendor";
 
 const Stack = createNativeStackNavigator();
@@ -37,6 +39,51 @@ export default function App() {
   const [cartCount, setCartCount] = useState(0);
   const [vendorObj, setVendorObj] = useState(null);
   const [error, setErrorMsg] = useState(null);
+  const [cart, setCart] = useState([]);
+  // const addToCart = () => {};
+  // const addToCart = (product) => {
+  //   setCart((prevCart) => {
+  //     // Check if the item is already in the cart
+  //     const itemIndex = prevCart.findIndex((item) => item.id === product.id);
+
+  //     if (itemIndex !== -1) {
+  //       // If item exists, update the quantity
+  //       const updatedCart = [...prevCart];
+  //       updatedCart[itemIndex] = {
+  //         ...updatedCart[itemIndex],
+  //         quantity: updatedCart[itemIndex].quantity + 1, // Increment quantity
+  //       };
+  //       return updatedCart;
+  //     } else {
+  //       // If item doesn't exist, add new item with quantity set to 1
+  //       return [...prevCart, { ...product, quantity: 1 }];
+  //     }
+  //   });
+  // };
+
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      // Check if the product is already in the cart
+      const existingProduct = prevCart.find((item) => item.id === product.id);
+
+      if (existingProduct) {
+        // Update the quantity of the existing product
+        return prevCart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        // Add new product with quantity set to 1
+        return [...prevCart, { ...product, quantity: 1 }];
+      }
+    });
+  };
+
+  // const removeFromCart = () => {};
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  };
   const defaultAddress = {
     city: "Shanghai",
     country: "China",
@@ -103,75 +150,84 @@ export default function App() {
           <LoginContext.Provider value={{ login, setLogin }}>
             <UserContext.Provider value={{ user, setUser }}>
               <CartCountContext.Provider value={{ cartCount, setCartCount }}>
-                <NavigationContainer>
-                  <Stack.Navigator>
-                    <Stack.Screen
-                      name="bottom-navigation"
-                      component={BottomTab}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="food-nav"
-                      component={FoodNavigator}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="vendors-page"
-                      component={VendorsPage}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="vendor"
-                      component={Vendor}
-                      options={{ headerShown: true }}
-                    />
-                    <Stack.Screen
-                      name="signUp"
-                      component={SignUp}
-                      options={{ headerShown: true }}
-                    />
-                    <Stack.Screen
-                      name="rating"
-                      component={AddRating}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="shopDetails"
-                      component={VendorShopDetail}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="addProduct"
-                      component={AddProduct}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="registrationPage"
-                      component={VendorRegistrationPage}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="showVendorsPage"
-                      component={AllVendors}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="UpdateVendor"
-                      component={UpdateVendorForm}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="ProductsPage"
-                      component={ProductsPage}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="UpdateProduct"
-                      component={UpdateProduct}
-                      options={{ headerShown: false }}
-                    />
-                  </Stack.Navigator>
-                </NavigationContainer>
+                <CartContext.Provider
+                  value={{ cart, addToCart, removeFromCart }}
+                >
+                  <NavigationContainer>
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="bottom-navigation"
+                        component={BottomTab}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="food-nav"
+                        component={FoodNavigator}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="vendors-page"
+                        component={VendorsPage}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="vendor"
+                        component={Vendor}
+                        options={{ headerShown: true }}
+                      />
+                      <Stack.Screen
+                        name="signUp"
+                        component={SignUp}
+                        options={{ headerShown: true }}
+                      />
+                      <Stack.Screen
+                        name="rating"
+                        component={AddRating}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="shopDetails"
+                        component={VendorShopDetail}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="addProduct"
+                        component={AddProduct}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="registrationPage"
+                        component={VendorRegistrationPage}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="showVendorsPage"
+                        component={AllVendors}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="UpdateVendor"
+                        component={UpdateVendorForm}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="ProductsPage"
+                        component={ProductsPage}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="UpdateProduct"
+                        component={UpdateProduct}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="ProductsListPage"
+                        component={ProductsList}
+                        options={{ headerShown: false }}
+                      />
+                    </Stack.Navigator>
+                  </NavigationContainer>
+                </CartContext.Provider>
               </CartCountContext.Provider>
             </UserContext.Provider>
           </LoginContext.Provider>

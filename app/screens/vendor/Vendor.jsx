@@ -14,7 +14,7 @@ const Vendor = ({ navigation }) => {
   const { location, setLocation } = useContext(UserLocationContext);
   const item = route.params;
   console.log(item.coords.latitude,item.coords.longitude)
-  // console.log(location.coords.latitude,location.coords.longitude)
+  console.log(location.coords.latitude,location.coords.longitude)
 
   useEffect(() => {
     GoogleApiServices.calculateDistanceAndTime(

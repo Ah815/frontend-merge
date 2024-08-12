@@ -41,6 +41,23 @@ const BottomTab = () => {
       headerShown={false}
       inactiveColor="#3e2465"
     >
+       <Tab.Screen
+        name="ChatBot"
+        component={ChatBot}
+        // component={UploadImage}
+        options={{
+          tabBarStyle: tabBarStyle,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={focused ? COLORS.secondary : COLORS.secondary1}
+              size={26}
+            />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Home"
         component={Home}
@@ -126,23 +143,7 @@ const BottomTab = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="ChatBot"
-        component={ChatBot}
-        // component={UploadImage}
-        options={{
-          tabBarStyle: tabBarStyle,
-          tabBarShowLabel: false,
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={focused ? "person" : "person-outline"}
-              color={focused ? COLORS.secondary : COLORS.secondary1}
-              size={26}
-            />
-          ),
-        }}
-      />
+     
       
     </Tab.Navigator>
   );
