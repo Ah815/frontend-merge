@@ -158,6 +158,7 @@ export default function App() {
                       component={UpdateVendorForm}
                       options={{ headerShown: false }}
                     />
+                    
                   </Stack.Navigator>
                 </NavigationContainer>
               </CartCountContext.Provider>

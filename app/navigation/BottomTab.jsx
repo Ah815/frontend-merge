@@ -11,6 +11,7 @@ import { CartCountContext } from "../context/CartCountContext";
 import { LoginContext } from "../context/LoginContext";
 import LoginPage from "../screens/LoginPage";
 import UploadImage from "../components/Image Upload/UploadImage";
+import ChatBot from "../components/ChatBot/chatBot";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,15 +24,15 @@ const tabBarStyle = {
 
 const BottomTab = () => {
   // const {count, isCartLoading, error, refetch} =fetchCartCount();
-  
+
   const { cartCount, setCartCount } = useContext(CartCountContext);
-  const {login, setLogin} = useContext(LoginContext)
+  const { login, setLogin } = useContext(LoginContext);
   // console.log(cartCount)
 
   // if(isCartLoading){
   //   setCartCount(count)
   // }
-  
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -56,7 +57,6 @@ const BottomTab = () => {
           ),
         }}
       />
-
       <Tab.Screen
         name="Search"
         component={Search}
@@ -73,7 +73,6 @@ const BottomTab = () => {
           ),
         }}
       />
-
       <Tab.Screen
         name="Cart"
         component={Cart}
@@ -82,36 +81,34 @@ const BottomTab = () => {
           tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <View style={{ width: 26, height: 26, position: 'relative' }}>
-            <FontAwesome
-                name={
-                    focused ? "opencart" : "opencart"
-                }
+            <View style={{ width: 26, height: 26, position: "relative" }}>
+              <FontAwesome
+                name={focused ? "opencart" : "opencart"}
                 color={focused ? COLORS.secondary : COLORS.secondary1}
                 size={26}
-            />
-            
-                <View
-                    style={{
-                        position: 'absolute',
-                        right: -6,
-                        top: -3,
-                        backgroundColor: 'red',
-                        borderRadius: 7,
-                        width: 14,
-                        height: 14,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Text style={{ color: 'white', fontSize: 10 }}>{cartCount}</Text>
-                </View>
-            
-        </View>
+              />
+
+              <View
+                style={{
+                  position: "absolute",
+                  right: -6,
+                  top: -3,
+                  backgroundColor: "red",
+                  borderRadius: 7,
+                  width: 14,
+                  height: 14,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 10 }}>
+                  {cartCount}
+                </Text>
+              </View>
+            </View>
           ),
         }}
       />
-
       <Tab.Screen
         name="Profile"
         component={login ? Profile : LoginPage}
@@ -129,6 +126,24 @@ const BottomTab = () => {
           ),
         }}
       />
+      <Tab.Screen
+        name="ChatBot"
+        component={ChatBot}
+        // component={UploadImage}
+        options={{
+          tabBarStyle: tabBarStyle,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={focused ? COLORS.secondary : COLORS.secondary1}
+              size={26}
+            />
+          ),
+        }}
+      />
+      
     </Tab.Navigator>
   );
 };
