@@ -24,6 +24,8 @@ import AllVendors from "./app/components/Vendor Screens/AllVendors";
 import UpdateVendorForm from "./app/components/Vendor Screens/UpdateVendor";
 import VendorShopDetail from "./app/components/Vendor Screens/ShowVendorDetail";
 import AddProduct from "./app/components/Product/AddProduct";
+import ProductsPage from "./app/components/Product/ProductsPage";
+import UpdateProduct from "./app/components/Product/UpdateProductPage";
 // import Vendor from "./app/screens/vendor/Vendor";
 
 const Stack = createNativeStackNavigator();
@@ -133,12 +135,12 @@ export default function App() {
                       component={AddRating}
                       options={{ headerShown: false }}
                     />
-                      <Stack.Screen
+                    <Stack.Screen
                       name="shopDetails"
                       component={VendorShopDetail}
                       options={{ headerShown: false }}
                     />
-                      <Stack.Screen
+                    <Stack.Screen
                       name="addProduct"
                       component={AddProduct}
                       options={{ headerShown: false }}
@@ -158,7 +160,16 @@ export default function App() {
                       component={UpdateVendorForm}
                       options={{ headerShown: false }}
                     />
-                    
+                    <Stack.Screen
+                      name="ProductsPage"
+                      component={ProductsPage}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="UpdateProduct"
+                      component={UpdateProduct}
+                      options={{ headerShown: false }}
+                    />
                   </Stack.Navigator>
                 </NavigationContainer>
               </CartCountContext.Provider>

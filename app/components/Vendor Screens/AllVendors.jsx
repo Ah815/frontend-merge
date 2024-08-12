@@ -106,6 +106,8 @@ export default function AllVendors({ navigation }) {
       user.userType === "Admin"
         ? setVendors(response.data.vendors)
         : setVendors(filteredResponse);
+      await AsyncStorage.setItem("vendorID", filteredResponse[0]._id);
+      console.log("ff fired", filteredResponse[0]._id);
     } catch (error) {
       console.log("Error fetching vendors:", error);
     } finally {
@@ -164,6 +166,13 @@ export default function AllVendors({ navigation }) {
                 title="Edit"
                 onPress={() => {
                   navigation.navigate("UpdateVendor", { id: item._id });
+                }}
+                color="#007BFF"
+              />
+              <Button
+                title="View Products"
+                onPress={() => {
+                  navigation.navigate("ProductsPage", { vendorId: item._id });
                 }}
                 color="#007BFF"
               />

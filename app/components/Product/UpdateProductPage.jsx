@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -9,13 +9,14 @@ import {
   Alert,
   Image,
   TouchableOpacity,
-  ActivityIndicator, // Import ActivityIndicator for the loader
+  ActivityIndicator,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Validation schema for Formik
 const validationSchema = Yup.object().shape({
@@ -26,15 +27,37 @@ const validationSchema = Yup.object().shape({
     .typeError("Price must be a number"),
 });
 
-const AddProduct = ({ navigation }) => {
+const UpdateProduct = () => {
+  const [product, setProduct] = useState(null);
   const [imageUri, setImageUri] = useState(null);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const route = useRoute();
-  const { vendorId } = route.params;
+  const navigation = useNavigation();
+  const { productId } = route.params;
 
-  // Function to pick image from gallery
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const vendorId = await AsyncStorage.getItem("vendorID");
+      try {
+        const response = await axios.get(
+          `https://store-backend-sage.vercel.app/api/products/getProduct/${productId}`
+        );
+        if (response.data.success) {
+          setProduct(response.data.product);
+          setImageUri(response.data.product.imageUrl);
+        } else {
+          Alert.alert("Error", response.data.message);
+        }
+      } catch (error) {
+        Alert.alert("Error", "Failed to fetch product details.");
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
   const pickImage = async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -43,7 +66,7 @@ const AddProduct = ({ navigation }) => {
       quality: 1,
     });
 
-    setLoading(false); // Stop loading
+    setLoading(false);
 
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
@@ -53,7 +76,6 @@ const AddProduct = ({ navigation }) => {
     }
   };
 
-  // Function to upload image to Cloudinary
   const uploadImage = async (uri) => {
     try {
       const data = new FormData();
@@ -75,48 +97,55 @@ const AddProduct = ({ navigation }) => {
       );
 
       if (response.data.secure_url) {
-        console.log("Image URL:", response.data.secure_url);
-        return response.data.secure_url; // Return the image URL for use in the form submission
+        return response.data.secure_url;
       }
     } catch (error) {
-      console.error("Error uploading image:", error);
       Alert.alert("Upload Error", "Failed to upload image.");
     }
   };
 
   const handleSubmit = async (values) => {
     const { description, price } = values;
-    const imageUrl = imageUri ? await uploadImage(imageUri) : null; // Upload image and get the URL
+    const imageUrl = imageUri ? await uploadImage(imageUri) : product.imageUrl;
 
     try {
-      const response = await axios.post(
-        "https://store-backend-sage.vercel.app/api/products/addProduct",
+      const response = await axios.put(
+        `https://store-backend-sage.vercel.app/api/products/updateProduct/${productId}`,
         {
           description,
           price,
           imageUrl,
-          vendorId,
         }
       );
 
       if (response.data.success) {
         Alert.alert("Success", response.data.message);
-        navigation.navigate("ProductsPage", { vendorId });
+        navigation.navigate("ProductsPage", { vendorId: vendorId });
       } else {
         Alert.alert("Error", response.data.message);
       }
     } catch (error) {
-      console.error("Error submitting product:", error);
-      Alert.alert("Submission Error", "Failed to add product.");
+      Alert.alert("Submission Error", "Failed to update product.");
     }
   };
 
+  if (!product) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#3498db" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Add Product</Text>
+      <Text style={styles.title}>Update Product</Text>
 
       <Formik
-        initialValues={{ description: "", price: "" }}
+        initialValues={{
+          description: product.description,
+          price: product.price.toString(),
+        }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -184,12 +213,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f0f4f8", // Light blue-gray background for a fresh look
+    backgroundColor: "#f0f4f8",
   },
   title: {
     fontSize: 28,
-    fontWeight: "700", // Bold font weight for emphasis
-    color: "#2c3e50", // Dark blue-gray for the title
+    fontWeight: "700",
+    color: "#2c3e50",
     marginBottom: 30,
     textAlign: "center",
   },
@@ -197,10 +226,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#BDC3C7", // Soft gray border
-    backgroundColor: "#ffffff", // White background for inputs
-    elevation: 3, // Shadow for Android
-    shadowColor: "#000", // Shadow color for iOS
+    borderColor: "#BDC3C7",
+    backgroundColor: "#ffffff",
+    elevation: 3,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -208,20 +237,20 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#34495e", // Darker text color for labels
+    color: "#34495e",
     marginLeft: 15,
     marginTop: 10,
   },
   input: {
     height: 50,
     borderColor: "#BDC3C7",
-    borderBottomWidth: 1, // Underline style for input fields
+    borderBottomWidth: 1,
     paddingHorizontal: 15,
     fontSize: 16,
-    color: "#2c3e50", // Dark blue-gray text color
+    color: "#2c3e50",
   },
   errorText: {
-    color: "#e74c3c", // Red color for error messages
+    color: "#e74c3c",
     fontSize: 12,
     marginLeft: 15,
     marginBottom: 10,
@@ -232,23 +261,23 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#BDC3C7", // Soft gray border around the image
+    borderColor: "#BDC3C7",
     alignSelf: "center",
   },
   button: {
-    backgroundColor: "#3498db", // Bright blue background for buttons
+    backgroundColor: "#3498db",
     paddingVertical: 15,
     borderRadius: 10,
     marginVertical: 10,
     alignItems: "center",
-    elevation: 3, // Shadow for Android
-    shadowColor: "#000", // Shadow color for iOS
+    elevation: 3,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
   buttonText: {
-    color: "#ffffff", // White text color for buttons
+    color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -258,4 +287,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddProduct;
+export default UpdateProduct;

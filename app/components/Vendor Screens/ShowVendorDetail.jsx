@@ -4,8 +4,9 @@ import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 import Button from "../Button";
 import { COLORS } from "../../constants/theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const VendorShopDetail = ({navigation}) => {
+const VendorShopDetail = ({ navigation }) => {
   const { user } = useContext(UserContext);
   const [vendors, setVendors] = useState([]);
 
@@ -56,8 +57,11 @@ const VendorShopDetail = ({navigation}) => {
                   : "No products available"}
               </Text>
               <View>
-                <Button onPress={() => navigation.navigate('addProduct')}
-                 style={styles.button}
+                <Button
+                  onPress={() =>
+                    navigation.navigate("addProduct", { vendorId: vendor._id })
+                  }
+                  style={styles.button}
                   title={`add product`}
                 ></Button>
               </View>
@@ -153,7 +157,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
   },
-  
 });
 
 export default VendorShopDetail;

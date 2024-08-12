@@ -103,7 +103,15 @@ const Profile = ({ navigation }) => {
                 {" "}
                 shopDetails{" "}
               </Text>
-
+              <Text
+                style={styles.registration}
+                onPress={() => {
+                  navigation.navigate("ProductsPage");
+                }}
+              >
+                {" "}
+                show products{" "}
+              </Text>
           {/* <View
             style={{
               height: 140,
