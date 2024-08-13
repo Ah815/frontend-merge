@@ -37,7 +37,7 @@
 //     // </View>
 //     <View>
 //       <Flatlist
-//       data= 
+//       data=
 //         horizontal
 //         showsHorizontalScrollIndicator={false}
 //         style={{ marginTop: 5, rowGap: 10 }}
@@ -59,9 +59,15 @@
 
 // const styles = StyleSheet.create({});
 
-
 import React, { useContext, useState, useEffect } from "react";
-import { FlatList, StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
 import StoreComponent from "./StoreComponent";
 import { useNavigation } from "@react-navigation/native";
@@ -76,13 +82,15 @@ const NearByVendors = () => {
 
   const getAllProductsFromDB = async () => {
     try {
-      const response = await axios.get('https://store-backend-sage.vercel.app/api/products/getAllProducts');
-      console.log('response data', response.data);
+      const response = await axios.get(
+        "https://store-backend-sage.vercel.app/api/products/getAllProducts"
+      );
+      console.log("response data", response.data);
       setProducts(response.data.products); // Adjust according to your API response structure
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching products:', error);
-      setError('Failed to load products');
+      console.error("Error fetching products:", error);
+      setError("Failed to load products");
       setLoading(false);
     }
   };
@@ -110,15 +118,26 @@ const NearByVendors = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={products}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.list}
-        renderItem={renderItem}
-        // keyExtractor={(item) => item.id.toString()} // Ensure you have a unique key for each item
-      />
+    <View>
+      <View style={styles.container}>
+        <FlatList
+          data={products}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.list}
+          renderItem={renderItem}
+          // keyExtractor={(item) => item.id.toString()} // Ensure you have a unique key for each item
+        />
+      </View>
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            getAllProductsFromDB()
+          }}
+        >
+          <Text>Check for updates</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

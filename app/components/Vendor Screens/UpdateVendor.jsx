@@ -38,7 +38,7 @@ const UpdateVendorForm = ({ navigation }) => {
   useEffect(() => {
     const fetchVendor = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
+        const token = await ("token");
         const endpoint = `https://store-backend-sage.vercel.app/api/vendors/getVendor/${id}`;
         const response = await axios.get(endpoint, {
           headers: {
@@ -76,7 +76,7 @@ const UpdateVendorForm = ({ navigation }) => {
     setError("");
 
     try {
-      const token = await AsyncStorage.getItem("token");
+      const token = await ("token");
       const endpoint = `https://store-backend-sage.vercel.app/api/vendors/updateVendor/${id}`;
       const response = await axios.put(endpoint, formData, {
         headers: {

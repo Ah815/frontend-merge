@@ -23,7 +23,7 @@ const VendorList = () => {
       const response = await axios.get(
         "https://store-backend-sage.vercel.app/api/vendors/getVendors"
       ); // Adjust URL as needed
-      console.log(response.data.vendors)
+      console.log(response.data.vendors);
       setVendors(response.data.vendors); // Adjust according to your API response structure
     } catch (error) {
       console.error("Error fetching vendors:", error);
@@ -71,18 +71,34 @@ const VendorList = () => {
   }
 
   return (
-    <FlatList
-      horizontal
-      data={vendors}
-      keyExtractor={(item) => item._id}
-      renderItem={renderVendorItem}
-      contentContainerStyle={styles.listContainer}
-      showsHorizontalScrollIndicator={false}
-    />
+    <View style={styles.container}>
+      <FlatList
+        horizontal
+        data={vendors}
+        keyExtractor={(item) => item._id}
+        renderItem={renderVendorItem}
+        contentContainerStyle={styles.listContainer}
+        showsHorizontalScrollIndicator={false}
+      />
+      <TouchableOpacity
+        style={styles.refreshButton}
+        onPress={() => {
+          fetchVendors();
+        }}
+      >
+        <Text style={styles.refreshButtonText}>Refresh Vendors</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingTop: 20,
+    backgroundColor: "#f9f9f9",
+  },
   listContainer: {
     paddingVertical: 10,
   },
@@ -130,6 +146,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "red",
     marginVertical: 20,
+  },
+  refreshButton: {
+    marginTop: 20,
+    backgroundColor: "#28a745",
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: "center",
+  },
+  refreshButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

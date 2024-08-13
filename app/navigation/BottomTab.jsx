@@ -12,6 +12,7 @@ import { LoginContext } from "../context/LoginContext";
 import LoginPage from "../screens/LoginPage";
 import UploadImage from "../components/Image Upload/UploadImage";
 import ChatBot from "../components/ChatBot/chatBot";
+import { CartContext } from "../context/CartContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,7 @@ const BottomTab = () => {
       headerShown={false}
       inactiveColor="#3e2465"
     >
-       <Tab.Screen
+      <Tab.Screen
         name="ChatBot"
         component={ChatBot}
         // component={UploadImage}
@@ -97,33 +98,37 @@ const BottomTab = () => {
           tabBarStyle: tabBarStyle,
           tabBarShowLabel: false,
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <View style={{ width: 26, height: 26, position: "relative" }}>
-              <FontAwesome
-                name={focused ? "opencart" : "opencart"}
-                color={focused ? COLORS.secondary : COLORS.secondary1}
-                size={26}
-              />
+          tabBarIcon: ({ focused }) => {
+            const { carts } = useContext(CartContext);
 
-              <View
-                style={{
-                  position: "absolute",
-                  right: -6,
-                  top: -3,
-                  backgroundColor: "red",
-                  borderRadius: 7,
-                  width: 14,
-                  height: 14,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ color: "white", fontSize: 10 }}>
-                  {cartCount}
-                </Text>
+            return (
+              <View style={{ width: 26, height: 26, position: "relative" }}>
+                <FontAwesome
+                  name={focused ? "opencart" : "opencart"}
+                  color={focused ? COLORS.secondary : COLORS.secondary1}
+                  size={26}
+                />
+
+                <View
+                  style={{
+                    position: "absolute",
+                    right: -6,
+                    top: -3,
+                    backgroundColor: "red",
+                    borderRadius: 7,
+                    width: 14,
+                    height: 14,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "white", fontSize: 10 }}>
+                    {carts.length}
+                  </Text>
+                </View>
               </View>
-            </View>
-          ),
+            );
+          },
         }}
       />
       <Tab.Screen
@@ -143,8 +148,6 @@ const BottomTab = () => {
           ),
         }}
       />
-     
-      
     </Tab.Navigator>
   );
 };

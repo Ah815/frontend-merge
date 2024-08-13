@@ -26,8 +26,9 @@ import VendorShopDetail from "./app/components/Vendor Screens/ShowVendorDetail";
 import AddProduct from "./app/components/Product/AddProduct";
 import ProductsPage from "./app/components/Product/ProductsPage";
 import UpdateProduct from "./app/components/Product/UpdateProductPage";
-import { CartContext } from "./app/context/CartContext";
+import { CartContext, CartProvider } from "./app/context/CartContext";
 import ProductsList from "./app/components/Vendor Screens/ShowAllProductsToUser";
+import CheckOut from "./app/components/CheckOut";
 // import Vendor from "./app/screens/vendor/Vendor";
 
 const Stack = createNativeStackNavigator();
@@ -61,29 +62,29 @@ export default function App() {
   //   });
   // };
 
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      // Check if the product is already in the cart
-      const existingProduct = prevCart.find((item) => item.id === product.id);
+  // const addToCart = (product) => {
+  //   setCart((prevCart) => {
+  //     // Check if the product is already in the cart
+  //     const existingProduct = prevCart.find((item) => item.id === product.id);
 
-      if (existingProduct) {
-        // Update the quantity of the existing product
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        // Add new product with quantity set to 1
-        return [...prevCart, { ...product, quantity: 1 }];
-      }
-    });
-  };
+  //     if (existingProduct) {
+  //       // Update the quantity of the existing product
+  //       return prevCart.map((item) =>
+  //         item.id === product.id
+  //           ? { ...item, quantity: item.quantity + 1 }
+  //           : item
+  //       );
+  //     } else {
+  //       // Add new product with quantity set to 1
+  //       return [...prevCart, { ...product, quantity: 1 }];
+  //     }
+  //   });
+  // };
 
   // const removeFromCart = () => {};
-  const removeFromCart = (productId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
-  };
+  // const removeFromCart = (productId) => {
+  //   setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  // };
   const defaultAddress = {
     city: "Shanghai",
     country: "China",
@@ -133,7 +134,7 @@ export default function App() {
   }
 
   const loginStatus = async () => {
-    const userToken = await AsyncStorage.getItem("token");
+    const userToken = await "token";
 
     if (userToken !== null) {
       setLogin(true);
@@ -150,9 +151,10 @@ export default function App() {
           <LoginContext.Provider value={{ login, setLogin }}>
             <UserContext.Provider value={{ user, setUser }}>
               <CartCountContext.Provider value={{ cartCount, setCartCount }}>
-                <CartContext.Provider
+                {/* <CartContext.Provider
                   value={{ cart, addToCart, removeFromCart }}
-                >
+                > */}
+                <CartProvider>
                   <NavigationContainer>
                     <Stack.Navigator>
                       <Stack.Screen
@@ -225,9 +227,15 @@ export default function App() {
                         component={ProductsList}
                         options={{ headerShown: false }}
                       />
+                      <Stack.Screen
+                        name="checkOut"
+                        component={CheckOut}
+                        options={{ headerShown: false }}
+                      />
                     </Stack.Navigator>
                   </NavigationContainer>
-                </CartContext.Provider>
+                </CartProvider>
+                {/* </CartContext.Provider> */}
               </CartCountContext.Provider>
             </UserContext.Provider>
           </LoginContext.Provider>

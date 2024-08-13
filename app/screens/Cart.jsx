@@ -6,24 +6,32 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from "react-native";
 import { CartContext } from "../context/CartContext";
 
-const Cart = () => {
-  const { cart, removeFromCart } = useContext(CartContext);
+const Cart = ({ navigation }) => {
+  const { carts, removeFromCart } = useContext(CartContext);
+  console.log("this is cart", carts);
 
-  if (!cart) {
+  if (!carts) {
     return <Text>Loading...</Text>; // Handle loading or context not available
   }
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-      <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
+      <Image source={{ uri: item.imageUrl }} style={styles.itemImage} />
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.description}</Text>
+        <Text style={styles.itemPrice}>rs {item.price}</Text>
+        <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
+      </View>
       <TouchableOpacity
         style={styles.removeButton}
-        onPress={() => removeFromCart(item.id)}
+        onPress={() => {
+          console.log('item',item)
+          removeFromCart(item);
+        }}
       >
         <Text style={styles.removeButtonText}>Remove</Text>
       </TouchableOpacity>
@@ -31,22 +39,22 @@ const Cart = () => {
   );
 
   const handleCheckout = () => {
-    // Implement checkout logic here
+    navigation.navigate("CheckOut");
     Alert.alert("Checkout", "Implement checkout logic.");
   };
 
   return (
     <View style={styles.container}>
-      {cart.length > 0 ? (
+      {carts.length > 0 ? (
         <>
           <FlatList
-            data={cart}
+            data={carts}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id} // Ensure keyExtractor converts id to string
+            keyExtractor={(item) => item._id} // Ensure keyExtractor converts id to string
           />
           <Text style={styles.total}>
             Total: $
-            {cart
+            {carts
               .reduce((total, item) => total + item.price * item.quantity, 0)
               .toFixed(2)}
           </Text>
@@ -72,7 +80,6 @@ const styles = StyleSheet.create({
   },
   item: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     padding: 12,
     marginBottom: 8,
@@ -83,20 +90,26 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  itemImage: {
+    width: 60, // Adjust size as needed
+    height: 60, // Adjust size as needed
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  itemDetails: {
+    flex: 1,
+  },
   itemName: {
     fontSize: 16,
     fontWeight: "bold",
-    flex: 2,
   },
   itemPrice: {
     fontSize: 16,
     color: "#333",
-    flex: 1,
   },
   itemQuantity: {
     fontSize: 16,
     color: "#666",
-    flex: 1,
   },
   removeButton: {
     backgroundColor: "#ff4d4d",

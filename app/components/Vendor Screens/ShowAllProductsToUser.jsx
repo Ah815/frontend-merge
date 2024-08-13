@@ -37,7 +37,7 @@ const ProductsList = ({ navigation }) => {
 
   useEffect(() => {
     fetchProducts();
-  }, [vendorId]);
+  }, []);
 
   const { addToCart } = useContext(CartContext);
 

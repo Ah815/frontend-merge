@@ -73,14 +73,17 @@ import React, { useContext } from "react";
 import { COLORS, SIZES } from "../constants/theme";
 import NetworkImage from "./NetworkImage";
 import { CartContext } from "../context/CartContext";
+import { useNavigation } from "@react-navigation/native";
 
 const StoreComponent = ({ item, onPress }) => {
   const { addToCart } = useContext(CartContext);
+  const navigation = useNavigation()
 
   // Function to handle adding the item to the cart
   const handleAddToCart = () => {
     console.log("Adding to cart:", item); // Log item details
-    addToCart(item); // Add item to cart
+    addToCart(item);
+    navigation.navigate("Cart");
   };
 
   return (
