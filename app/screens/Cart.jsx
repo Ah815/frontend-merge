@@ -1,16 +1,16 @@
 import React, { useContext, useState } from "react";
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
   Alert,
+  FlatList,
   Image,
   SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { CartContext } from "../context/CartContext";
 import PaymentModal from "../components/PaymentModal";
+import { CartContext } from "../context/CartContext";
 
 const Cart = ({ navigation }) => {
   const { carts, removeFromCart, emptyCart } = useContext(CartContext);

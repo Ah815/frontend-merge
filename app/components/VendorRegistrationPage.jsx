@@ -17,10 +17,63 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "../context/UserContext";
 import { COLORS } from "../constants/theme";
+import * as ImagePicker from "expo-image-picker";
 
 const VendorRegistrationPage = ({ navigation }) => {
   const { user } = useContext(UserContext);
   const [loader, setLoader] = useState(false);
+  const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
+
+  const pickImage = async () => {
+    setLoading(true); // Start loading
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    setLoading(false); // Stop loading
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    } else {
+      Alert.alert("No Image Selected", "You did not select an image.");
+    }
+  };
+
+  // Function to upload image to Cloudinary
+  const uploadImage = async (uri) => {
+    try {
+      const data = new FormData();
+      data.append("file", {
+        uri,
+        type: "image/jpeg",
+        name: "photo.jpg",
+      });
+      data.append("upload_preset", "avian-med");
+
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dg40bum8b/image/upload",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data.secure_url) {
+        console.log("Image URL:", response.data.secure_url);
+        return response.data.secure_url; // Return the image URL for use in the form submission
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Alert.alert("Upload Error", "Failed to upload image.");
+    }
+  };
 
   // Define validation schema using Yup
   const validationSchema = Yup.object().shape({
@@ -35,30 +88,8 @@ const VendorRegistrationPage = ({ navigation }) => {
       .max(5, "Rating must be between 1 and 5")
       .nullable(),
     products: Yup.array().of(Yup.string()).nullable(),
+    merchantQR: Yup.string().url("Invalid URL").nullable(),
   });
-
-  // Function to make vendor request
-  const makeVendorRequest = async () => {
-    try {
-      const bToken = await AsyncStorage.getItem("token");
-      const endpoint =
-        "https://store-backend-sage.vercel.app/api/vendors/makeVendor";
-      const response = await axios.post(
-        endpoint,
-        { userId: user._id },
-        {
-          headers: {
-            Authorization: `Bearer ${bToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
 
   // Function to handle form submission
   const addVendorRequest = async (values) => {
@@ -72,13 +103,6 @@ const VendorRegistrationPage = ({ navigation }) => {
 
       if (!bToken) {
         Alert.alert("Error", "No token found. Please log in again.");
-        setLoader(false);
-        return;
-      }
-
-      const makeVendorResponse = await makeVendorRequest();
-      if (!makeVendorResponse) {
-        Alert.alert("Error", "Error in making user type vendor");
         setLoader(false);
         return;
       }
@@ -200,22 +224,49 @@ const VendorRegistrationPage = ({ navigation }) => {
             {errors.rating && touched.rating && (
               <Text style={styles.errorText}>{errors.rating}</Text>
             )}
-            {/* 
-          <Text style={styles.label}>Products (comma-separated)</Text>
+
+            <Text style={styles.label}>Rating</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange("rating")}
+              onBlur={handleBlur("rating")}
+              value={values.rating}
+              keyboardType="numeric"
+            />
+            {errors.rating && touched.rating && (
+              <Text style={styles.errorText}>{errors.rating}</Text>
+            )}
+
+            {/* Display selected image */}
+            {imageUri && (
+              <Image source={{ uri: imageUri }} style={styles.image} />
+            )}
+
+            <TouchableOpacity
+              onPress={pickImage}
+              style={styles.button}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? "Loading..." : "Pick Image"}
+              </Text>
+            </TouchableOpacity>
+
+            {/* <Text style={styles.label}>Products (comma-separated)</Text>
           <TextInput
             style={styles.input}
             onChangeText={(text) =>
-              setFieldValue(ws
-                "products",
-                text.split(",").map((item) => item.trim())
-              )
+              // setFieldValue(ws
+              //   "products",
+              //   text.split(",").map((item) => item.trim())
+              // )
             }
             onBlur={handleBlur("products")}
             value={values.products.join(", ")}
           />
           {errors.products && touched.products && (
             <Text style={styles.errorText}>{errors.products}</Text>
-          )} */}
+          )}  */}
 
             <TouchableOpacity
               onPress={handleSubmit}
@@ -243,7 +294,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     fontWeight: "bold",
   },
-
   label: {
     fontSize: 16,
     marginBottom: 10,
@@ -272,6 +322,12 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: "#ccc", // Light gray when disabled
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 20,
   },
 });
 

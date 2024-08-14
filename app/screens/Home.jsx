@@ -1,21 +1,15 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState, useContext } from "react";
-import { COLORS, SIZES } from "../constants/theme";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import pages from "./page.style";
-import uidata from "../constants/uidata";
-import { UserReversedGeoCode } from "../context/UserReversedGeoCode";
-import { UserLocationContext } from "../context/UserLocationContext";
-import HomeHeader from "../components/HomeHeader";
 import CategoryList from "../components/CategoryList";
 import ChoicesList from "../components/ChoicesList";
-import Heading from "../components/Heading";
-import NearByVendors from "../components/NearByVendors";
 import Divider from "../components/Divider";
-import NewFoodList from "../components/NewFoodList";
-import FastestNearYou from "../components/FastestNearYou";
+import Heading from "../components/Heading";
 import HomeCategories from "../components/HomeCategories";
+import HomeHeader from "../components/HomeHeader";
+import NearByVendors from "../components/NearByVendors";
 import VendorList from "../components/Vendor Screens/ShowAllVendorsToUser";
+import pages from "./page.style";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
