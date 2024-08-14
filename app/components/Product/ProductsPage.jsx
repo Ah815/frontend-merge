@@ -63,6 +63,7 @@ const ProductsList = ({ navigation }) => {
   };
 
   // Render product item
+  
   const renderProduct = ({ item }) => (
     <View style={styles.productContainer}>
       <Image source={{ uri: item.imageUrl }} style={styles.productImage} />

@@ -53,7 +53,7 @@ const Cart = ({ navigation }) => {
             keyExtractor={(item) => item._id} // Ensure keyExtractor converts id to string
           />
           <Text style={styles.total}>
-            Total: $
+            Total: 
             {carts
               .reduce((total, item) => total + item.price * item.quantity, 0)
               .toFixed(2)}

@@ -55,10 +55,10 @@ const Home = () => {
               </View>
             ) : (
               <View>
-                <Heading heading={"Nearby vendors"} onPress={() => {}} />
+                <Heading heading={"Vendor Products"} onPress={() => {}} />
                 <NearByVendors />
                 <Divider /> 
-                <Heading heading={"Try a new vendors"} onPress={() => {}} />
+                <Heading heading={"NearBy Vendors"} onPress={() => {}} />
                 {/* <NewFoodList /> */}
                 <VendorList/>
 
