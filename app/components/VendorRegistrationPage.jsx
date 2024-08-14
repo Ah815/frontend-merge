@@ -93,6 +93,10 @@ const VendorRegistrationPage = ({ navigation }) => {
 
   // Function to handle form submission
   const addVendorRequest = async (values) => {
+    console.log("values ===>", values);
+
+    let { products, ...rest } = values;
+
     setLoader(true);
     try {
       const bToken = await AsyncStorage.getItem("token");
@@ -105,7 +109,7 @@ const VendorRegistrationPage = ({ navigation }) => {
 
       const endpoint =
         "https://store-backend-sage.vercel.app/api/vendors/addVendor";
-      const response = await axios.post(endpoint, values, {
+      const response = await axios.post(endpoint, rest, {
         headers: {
           Authorization: `Bearer ${bToken}`,
           "Content-Type": "application/json",
@@ -119,6 +123,7 @@ const VendorRegistrationPage = ({ navigation }) => {
         Alert.alert("Error", "Failed to register vendor. Please try again.");
       }
     } catch (error) {
+      console.log("error ===>", JSON.stringify(error));
       Alert.alert("Error", "An error occurred. Please try again.");
     } finally {
       setLoader(false);
@@ -230,6 +235,7 @@ const VendorRegistrationPage = ({ navigation }) => {
           {errors.rating && touched.rating && (
             <Text style={styles.errorText}>{errors.rating}</Text>
           )}
+<<<<<<< HEAD
 
           {/* Display selected image */}
           {imageUri && (
@@ -245,6 +251,24 @@ const VendorRegistrationPage = ({ navigation }) => {
               {loading ? "Loading..." : "Pick Image"}
             </Text>
           </TouchableOpacity>
+=======
+          {/* 
+          <Text style={styles.label}>Products (comma-separated)</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) =>
+              setFieldValue(ws
+                "products",
+                text.split(",").map((item) => item.trim())
+              )
+            }
+            onBlur={handleBlur("products")}
+            value={values.products.join(", ")}
+          />
+          {errors.products && touched.products && (
+            <Text style={styles.errorText}>{errors.products}</Text>
+          )} */}
+>>>>>>> df2fed23f950064b8c6d7998d230092dddccc067
 
           <TouchableOpacity
             onPress={handleSubmit}
@@ -271,6 +295,10 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     fontWeight: "bold",
   },
+<<<<<<< HEAD
+=======
+
+>>>>>>> df2fed23f950064b8c6d7998d230092dddccc067
   label: {
     fontSize: 16,
     marginBottom: 10,

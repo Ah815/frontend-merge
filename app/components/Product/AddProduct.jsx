@@ -29,6 +29,7 @@ const validationSchema = Yup.object().shape({
 const AddProduct = ({ navigation }) => {
   const [imageUri, setImageUri] = useState(null);
   const [loading, setLoading] = useState(false); // Add loading state
+  const [buttonLoader, setButtonLoader] = useState(false);
   const route = useRoute();
   const { vendorId } = route.params;
 
@@ -85,6 +86,7 @@ const AddProduct = ({ navigation }) => {
   };
 
   const handleSubmit = async (values) => {
+    setButtonLoader(true);
     const { description, price } = values;
     const imageUrl = imageUri ? await uploadImage(imageUri) : null; // Upload image and get the URL
 
@@ -101,12 +103,14 @@ const AddProduct = ({ navigation }) => {
 
       if (response.data.success) {
         Alert.alert("Success", response.data.message);
+        setButtonLoader(false);
         navigation.navigate("ProductsPage", { vendorId });
       } else {
         Alert.alert("Error", response.data.message);
       }
     } catch (error) {
       console.error("Error submitting product:", error);
+      setButtonLoader(false);
       Alert.alert("Submission Error", "Failed to add product.");
     }
   };
@@ -171,7 +175,11 @@ const AddProduct = ({ navigation }) => {
             )}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Submit</Text>
+              {buttonLoader ? (
+                <ActivityIndicator size="large" color="#3498db" />
+              ) : (
+                <Text style={styles.buttonText}>Submit</Text>
+              )}
             </TouchableOpacity>
           </>
         )}
