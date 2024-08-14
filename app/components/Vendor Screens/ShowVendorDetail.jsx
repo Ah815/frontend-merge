@@ -6,7 +6,9 @@ import Button from "../Button";
 import { COLORS } from "../../constants/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const VendorShopDetail = ({ navigation }) => {
+const VendorShopDetail = ({ navigation, route, ...props }) => {
+  const routes = route?.params?.data;
+  console.log("route", JSON.stringify(routes));
   const { user } = useContext(UserContext);
   const [vendors, setVendors] = useState([]);
 
@@ -17,10 +19,13 @@ const VendorShopDetail = ({ navigation }) => {
         "https://store-backend-sage.vercel.app/api/vendors/getVendors";
       const response = await axios.get(endpoint);
       const allVendors = response.data.vendors;
+      console.log("allVendors", allVendors);
       const filteredResponse =
         user.userType === "Admin"
           ? allVendors
-          : allVendors.filter((elem) => elem.userId === user._id);
+          : allVendors.filter(
+              (elem) => elem.userId == "66bc8eaceb6aa9b77397c885"
+            );
 
       setVendors(filteredResponse);
     } catch (error) {
@@ -43,23 +48,23 @@ const VendorShopDetail = ({ navigation }) => {
         vendors.map((vendor, index) => (
           <View key={index} style={styles.vendorCard}>
             <View style={styles.vendorInfo}>
-              <Text style={styles.vendorTitle}>{vendor.title}</Text>
-              <Text style={styles.vendorTime}>{vendor.time}</Text>
+              <Text style={styles.vendorTitle}>{routes.title}</Text>
+              <Text style={styles.vendorTime}>{routes.time}</Text>
               <Text style={styles.vendorRating}>
-                Rating: {vendor.rating} ({vendor.ratingCount} reviews)
+                Rating: {routes.rating} ({routes.ratingCount} reviews)
               </Text>
             </View>
             <View style={styles.vendorDetails}>
               <Text style={styles.detailLabel}>Products:</Text>
               <Text style={styles.detailValue}>
-                {vendor.products?.length > 0
+                {routes.products?.length > 0
                   ? vendor.products.join(", ")
                   : "No products available"}
               </Text>
               <View>
                 <Button
                   onPress={() =>
-                    navigation.navigate("addProduct", { vendorId: vendor._id })
+                    navigation.navigate("addProduct", { vendorId: user._id })
                   }
                   style={styles.button}
                   title={`add product`}
@@ -68,19 +73,19 @@ const VendorShopDetail = ({ navigation }) => {
 
               <Text style={styles.detailLabel}>Pickup:</Text>
               <Text style={styles.detailValue}>
-                {vendor.pickup ? "Yes" : "No"}
+                {routes.pickup ? "Yes" : "No"}
               </Text>
 
               <Text style={styles.detailLabel}>Delivery:</Text>
               <Text style={styles.detailValue}>
-                {vendor.delivery ? "Yes" : "No"}
+                {routes.delivery ? "Yes" : "No"}
               </Text>
 
               <Text style={styles.detailLabel}>Owner:</Text>
-              <Text style={styles.detailValue}>{vendor.owner}</Text>
+              <Text style={styles.detailValue}>{routes.owner}</Text>
 
               <Text style={styles.detailLabel}>Address:</Text>
-              <Text style={styles.detailValue}>{vendor.address}</Text>
+              <Text style={styles.detailValue}>{routes.address}</Text>
             </View>
           </View>
         ))

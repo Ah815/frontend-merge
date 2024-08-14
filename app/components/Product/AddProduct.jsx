@@ -85,7 +85,8 @@ const AddProduct = ({ navigation }) => {
     }
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmits = async (values) => {
+    console.log("hello");
     setButtonLoader(true);
     const { description, price } = values;
     const imageUrl = imageUri ? await uploadImage(imageUri) : null; // Upload image and get the URL
@@ -104,14 +105,15 @@ const AddProduct = ({ navigation }) => {
       if (response.data.success) {
         Alert.alert("Success", response.data.message);
         setButtonLoader(false);
-        navigation.navigate("ProductsPage", { vendorId });
+        navigation.navigate("Home");
       } else {
         Alert.alert("Error", response.data.message);
       }
     } catch (error) {
       console.error("Error submitting product:", error);
       setButtonLoader(false);
-      Alert.alert("Submission Error", "Failed to add product.");
+      // Alert.alert("Submission Error", "Failed to add product.");
+      navigation.navigate("Home");
     }
   };
 
@@ -122,7 +124,7 @@ const AddProduct = ({ navigation }) => {
       <Formik
         initialValues={{ description: "", price: "" }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
       >
         {({
           handleChange,
@@ -174,9 +176,9 @@ const AddProduct = ({ navigation }) => {
               <Image source={{ uri: imageUri }} style={styles.image} />
             )}
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmits}>
               {buttonLoader ? (
-                <ActivityIndicator size="large" color="#3498db" />
+                <ActivityIndicator size="large" color="white" />
               ) : (
                 <Text style={styles.buttonText}>Submit</Text>
               )}

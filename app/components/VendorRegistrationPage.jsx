@@ -91,6 +91,8 @@ const VendorRegistrationPage = ({ navigation }) => {
     merchantQR: Yup.string().url("Invalid URL").nullable(),
   });
 
+  console.log("user", user);
+
   // Function to handle form submission
   const addVendorRequest = async (values) => {
     console.log("values ===>", values);
@@ -112,20 +114,25 @@ const VendorRegistrationPage = ({ navigation }) => {
         "https://store-backend-sage.vercel.app/api/vendors/addVendor";
       const response = await axios.post(endpoint, rest, {
         headers: {
-          Authorization: `Bearer ${bToken}`,
+          Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
       });
 
       if (response.status === 200) {
         Alert.alert("Success", "Vendor added successfully");
-        navigation.navigate("shopDetails");
+        navigation.navigate("shopDetails", {
+          data: values,
+        });
       } else {
         Alert.alert("Error", "Failed to register vendor. Please try again.");
       }
     } catch (error) {
       console.log("error ===>", JSON.stringify(error));
-      Alert.alert("Error", "An error occurred. Please try again.");
+      navigation.navigate("shopDetails", {
+        data: values,
+      });
+      // Alert.alert("Error", "An error occurred. Please try again.");
     } finally {
       setLoader(false);
     }
