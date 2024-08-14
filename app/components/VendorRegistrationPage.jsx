@@ -100,6 +100,7 @@ const VendorRegistrationPage = ({ navigation }) => {
     setLoader(true);
     try {
       const bToken = await AsyncStorage.getItem("token");
+      console.log("bToken", bToken);
 
       if (!bToken) {
         Alert.alert("Error", "No token found. Please log in again.");
@@ -225,7 +226,7 @@ const VendorRegistrationPage = ({ navigation }) => {
               <Text style={styles.errorText}>{errors.rating}</Text>
             )}
 
-            <Text style={styles.label}>Rating</Text>
+            {/* <Text style={styles.label}>Rating</Text>
             <TextInput
               style={styles.input}
               onChangeText={handleChange("rating")}
@@ -235,14 +236,14 @@ const VendorRegistrationPage = ({ navigation }) => {
             />
             {errors.rating && touched.rating && (
               <Text style={styles.errorText}>{errors.rating}</Text>
-            )}
+            )} */}
 
             {/* Display selected image */}
-            {imageUri && (
+            {/* {imageUri && (
               <Image source={{ uri: imageUri }} style={styles.image} />
-            )}
+            )} */}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={pickImage}
               style={styles.button}
               disabled={loading}
@@ -250,7 +251,7 @@ const VendorRegistrationPage = ({ navigation }) => {
               <Text style={styles.buttonText}>
                 {loading ? "Loading..." : "Pick Image"}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* <Text style={styles.label}>Products (comma-separated)</Text>
           <TextInput
