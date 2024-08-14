@@ -61,6 +61,10 @@ const VendorRegistrationPage = ({ navigation }) => {
 
   // Function to handle form submission
   const addVendorRequest = async (values) => {
+    console.log("values ===>", values);
+
+    let { products, ...rest } = values;
+
     setLoader(true);
     try {
       const bToken = await AsyncStorage.getItem("token");
@@ -80,7 +84,7 @@ const VendorRegistrationPage = ({ navigation }) => {
 
       const endpoint =
         "https://store-backend-sage.vercel.app/api/vendors/addVendor";
-      const response = await axios.post(endpoint, values, {
+      const response = await axios.post(endpoint, rest, {
         headers: {
           Authorization: `Bearer ${bToken}`,
           "Content-Type": "application/json",
@@ -94,6 +98,7 @@ const VendorRegistrationPage = ({ navigation }) => {
         Alert.alert("Error", "Failed to register vendor. Please try again.");
       }
     } catch (error) {
+      console.log("error ===>", JSON.stringify(error));
       Alert.alert("Error", "An error occurred. Please try again.");
     } finally {
       setLoader(false);
@@ -193,7 +198,7 @@ const VendorRegistrationPage = ({ navigation }) => {
           {errors.rating && touched.rating && (
             <Text style={styles.errorText}>{errors.rating}</Text>
           )}
-{/* 
+          {/* 
           <Text style={styles.label}>Products (comma-separated)</Text>
           <TextInput
             style={styles.input}
@@ -230,12 +235,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  header:{
+  header: {
     fontSize: 24,
     marginBottom: 40,
     fontWeight: "bold",
   },
-  
+
   label: {
     fontSize: 16,
     marginBottom: 10,
