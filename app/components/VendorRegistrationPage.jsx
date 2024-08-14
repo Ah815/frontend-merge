@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   Switch,
+  SafeAreaView,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -106,99 +107,100 @@ const VendorRegistrationPage = ({ navigation }) => {
   };
 
   return (
-    <Formik
-      initialValues={{
-        title: "",
-        time: "",
-        address: "",
-        owner: "",
-        pickup: true,
-        delivery: true,
-        rating: "",
-        products: [], // Initialize as an array
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values) => addVendorRequest(values)}
-    >
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        errors,
-        touched,
-        setFieldValue,
-      }) => (
-        <ScrollView style={styles.container}>
-          <Text style={styles.header}>Vendor Registration</Text>
-          <Text style={styles.label}>Vendor</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange("title")}
-            onBlur={handleBlur("title")}
-            value={values.title}
-          />
-          {errors.title && touched.title && (
-            <Text style={styles.errorText}>{errors.title}</Text>
-          )}
+    <SafeAreaView style={{ flex: 1 }}>
+      <Formik
+        initialValues={{
+          title: "",
+          time: "",
+          address: "",
+          owner: "",
+          pickup: true,
+          delivery: true,
+          rating: "",
+          products: [], // Initialize as an array
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => addVendorRequest(values)}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          setFieldValue,
+        }) => (
+          <ScrollView style={styles.container}>
+            <Text style={styles.header}>Vendor Registration</Text>
+            <Text style={styles.label}>Vendor</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange("title")}
+              onBlur={handleBlur("title")}
+              value={values.title}
+            />
+            {errors.title && touched.title && (
+              <Text style={styles.errorText}>{errors.title}</Text>
+            )}
 
-          <Text style={styles.label}>Time</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange("time")}
-            onBlur={handleBlur("time")}
-            value={values.time}
-          />
-          {errors.time && touched.time && (
-            <Text style={styles.errorText}>{errors.time}</Text>
-          )}
+            <Text style={styles.label}>Time</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange("time")}
+              onBlur={handleBlur("time")}
+              value={values.time}
+            />
+            {errors.time && touched.time && (
+              <Text style={styles.errorText}>{errors.time}</Text>
+            )}
 
-          <Text style={styles.label}>Address</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange("address")}
-            onBlur={handleBlur("address")}
-            value={values.address}
-          />
-          {errors.address && touched.address && (
-            <Text style={styles.errorText}>{errors.address}</Text>
-          )}
+            <Text style={styles.label}>Address</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange("address")}
+              onBlur={handleBlur("address")}
+              value={values.address}
+            />
+            {errors.address && touched.address && (
+              <Text style={styles.errorText}>{errors.address}</Text>
+            )}
 
-          <Text style={styles.label}>Owner</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange("owner")}
-            onBlur={handleBlur("owner")}
-            value={values.owner}
-          />
-          {errors.owner && touched.owner && (
-            <Text style={styles.errorText}>{errors.owner}</Text>
-          )}
+            <Text style={styles.label}>Owner</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange("owner")}
+              onBlur={handleBlur("owner")}
+              value={values.owner}
+            />
+            {errors.owner && touched.owner && (
+              <Text style={styles.errorText}>{errors.owner}</Text>
+            )}
 
-          <Text style={styles.label}>Pickup</Text>
-          <Switch
-            value={values.pickup}
-            onValueChange={(value) => setFieldValue("pickup", value)}
-          />
+            <Text style={styles.label}>Pickup</Text>
+            <Switch
+              value={values.pickup}
+              onValueChange={(value) => setFieldValue("pickup", value)}
+            />
 
-          <Text style={styles.label}>Delivery</Text>
-          <Switch
-            value={values.delivery}
-            onValueChange={(value) => setFieldValue("delivery", value)}
-          />
+            <Text style={styles.label}>Delivery</Text>
+            <Switch
+              value={values.delivery}
+              onValueChange={(value) => setFieldValue("delivery", value)}
+            />
 
-          <Text style={styles.label}>Rating</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange("rating")}
-            onBlur={handleBlur("rating")}
-            value={values.rating}
-            keyboardType="numeric"
-          />
-          {errors.rating && touched.rating && (
-            <Text style={styles.errorText}>{errors.rating}</Text>
-          )}
-          {/* 
+            <Text style={styles.label}>Rating</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleChange("rating")}
+              onBlur={handleBlur("rating")}
+              value={values.rating}
+              keyboardType="numeric"
+            />
+            {errors.rating && touched.rating && (
+              <Text style={styles.errorText}>{errors.rating}</Text>
+            )}
+            {/* 
           <Text style={styles.label}>Products (comma-separated)</Text>
           <TextInput
             style={styles.input}
@@ -215,18 +217,19 @@ const VendorRegistrationPage = ({ navigation }) => {
             <Text style={styles.errorText}>{errors.products}</Text>
           )} */}
 
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={[styles.button, loader && styles.buttonDisabled]}
-            disabled={loader}
-          >
-            <Text style={styles.buttonText}>
-              {loader ? "Submitting..." : "Submit"}
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      )}
-    </Formik>
+            <TouchableOpacity
+              onPress={handleSubmit}
+              style={[styles.button, loader && styles.buttonDisabled]}
+              disabled={loader}
+            >
+              <Text style={styles.buttonText}>
+                {loader ? "Submitting..." : "Submit"}
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        )}
+      </Formik>
+    </SafeAreaView>
   );
 };
 

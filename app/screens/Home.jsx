@@ -48,20 +48,21 @@ const Home = () => {
             />
             {selectedCategory !== null && selectedSection !== null ? (
               <View>
-                <Heading heading={`Browse${selectedValue}`} onPress={() => {}} />
-
+                <Heading
+                  heading={`Browse${selectedValue}`}
+                  onPress={() => {}}
+                />
 
                 <HomeCategories />
               </View>
             ) : (
               <View>
-                <Heading heading={"Nearby vendors"} onPress={() => {}} />
-                <NearByVendors />
-                <Divider /> 
+                <Divider />
                 <Heading heading={"Try a new vendors"} onPress={() => {}} />
                 {/* <NewFoodList /> */}
-                <VendorList/>
-
+                <VendorList />
+                <Heading heading={"Nearby vendors"} onPress={() => {}} />
+                <NearByVendors />
                 <Divider />
                 {/* <Heading heading={"Vendor nearest to you"}  */}
               </View>

@@ -132,9 +132,9 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (item) => {
     // Find the index of the item in the cart
     const itemIndex = carts.findIndex((cart) => cart._id === item._id);
-  
+
     if (itemIndex === -1) return; // Item is not in the cart, do nothing
-  
+
     // Check the quantity of the item
     const cartItem = carts[itemIndex];
     if (cartItem.quantity > 1) {
@@ -151,8 +151,12 @@ export const CartProvider = ({ children }) => {
       setCarts(newItems);
     }
   };
-  
 
-  const value = { carts, addToCart, removeFromCart };
+  const emptyCart = async () => {
+    await AsyncStorage.setItem("carts", JSON.stringify([]));
+    setCarts([]);
+  };
+
+  const value = { carts, addToCart, removeFromCart, emptyCart };
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

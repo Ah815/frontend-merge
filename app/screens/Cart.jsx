@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,15 @@ import {
   StyleSheet,
   Alert,
   Image,
+  SafeAreaView,
 } from "react-native";
 import { CartContext } from "../context/CartContext";
+import PaymentModal from "../components/PaymentModal";
 
 const Cart = ({ navigation }) => {
-  const { carts, removeFromCart } = useContext(CartContext);
+  const { carts, removeFromCart, emptyCart } = useContext(CartContext);
+
+  const [paymentModal, setPaymentModal] = useState(false);
   console.log("this is cart", carts);
 
   if (!carts) {
@@ -29,7 +33,7 @@ const Cart = ({ navigation }) => {
       <TouchableOpacity
         style={styles.removeButton}
         onPress={() => {
-          console.log('item',item)
+          console.log("item", item);
           removeFromCart(item);
         }}
       >
@@ -39,36 +43,53 @@ const Cart = ({ navigation }) => {
   );
 
   const handleCheckout = () => {
-    navigation.navigate("CheckOut");
-    Alert.alert("Checkout", "Implement checkout logic.");
+    setPaymentModal(true);
   };
 
   return (
-    <View style={styles.container}>
-      {carts.length > 0 ? (
-        <>
-          <FlatList
-            data={carts}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id} // Ensure keyExtractor converts id to string
-          />
-          <Text style={styles.total}>
-            Total: $
-            {carts
-              .reduce((total, item) => total + item.price * item.quantity, 0)
-              .toFixed(2)}
-          </Text>
-          <TouchableOpacity
-            style={styles.checkoutButton}
-            onPress={handleCheckout}
-          >
-            <Text style={styles.checkoutButtonText}>Checkout</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <Text style={styles.emptyMessage}>Your cart is empty.</Text>
-      )}
-    </View>
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          {carts.length > 0 ? (
+            <>
+              <FlatList
+                data={carts}
+                renderItem={renderItem}
+                keyExtractor={(item) => item._id} // Ensure keyExtractor converts id to string
+              />
+              <Text style={styles.total}>
+                Total: $
+                {carts
+                  .reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )
+                  .toFixed(2)}
+              </Text>
+              <TouchableOpacity
+                style={styles.checkoutButton}
+                onPress={handleCheckout}
+              >
+                <Text style={styles.checkoutButtonText}>Checkout</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <Text style={styles.emptyMessage}>Your cart is empty.</Text>
+          )}
+        </View>
+      </SafeAreaView>
+      <PaymentModal
+        modalVisible={paymentModal}
+        setModalVisible={() => {
+          setPaymentModal(false);
+          emptyCart();
+          navigation.navigate("Home");
+          Alert.alert(
+            "Once you send receipt at our email, your order will be in processed"
+          );
+        }}
+      />
+    </>
   );
 };
 

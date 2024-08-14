@@ -67,11 +67,14 @@ import {
   View,
   ActivityIndicator,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import axios from "axios";
 import StoreComponent from "./StoreComponent";
 import { useNavigation } from "@react-navigation/native";
 import { VendorContext } from "../context/VendorContext";
+
+const { height, width } = Dimensions.get("window");
 
 const NearByVendors = () => {
   const navigation = useNavigation();
@@ -132,10 +135,10 @@ const NearByVendors = () => {
       <View>
         <TouchableOpacity
           onPress={() => {
-            getAllProductsFromDB()
+            getAllProductsFromDB();
           }}
         >
-          <Text>Check for updates</Text>
+          {/* <Text style={styles.txt1}>Check for updates</Text> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -150,6 +153,10 @@ const styles = StyleSheet.create({
   list: {
     marginTop: 5,
     rowGap: 10,
+  },
+  txt1: {
+    color: "black",
+    marginLeft: width * 0.04,
   },
 });
 

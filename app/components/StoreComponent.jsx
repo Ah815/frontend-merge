@@ -77,7 +77,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const StoreComponent = ({ item, onPress }) => {
   const { addToCart } = useContext(CartContext);
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   // Function to handle adding the item to the cart
   const handleAddToCart = () => {
@@ -128,18 +128,19 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   heading: {
-    fontSize: 14,
+    fontSize: 20,
     fontFamily: "regular",
     color: COLORS.gray,
   },
   small: {
-    fontSize: 12,
+    fontSize: 15,
     fontFamily: "regular",
     color: COLORS.gray,
   },
   addToCart: {
     color: COLORS.primary, // Optional: Style for the "Add To Cart" text
     fontWeight: "bold",
+    fontSize: 15,
   },
 });
 

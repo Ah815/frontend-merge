@@ -126,7 +126,6 @@
 
 // export default ProductsList;
 
-
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useContext, useState } from "react";
 import { COLORS, SIZES } from "../constants/theme";
@@ -148,7 +147,7 @@ const Profile = ({ navigation }) => {
 
   // const { user, isProfileLoading, error, refetch } = fetchProfile();
   const { isProfileLoading, error, refetch } = fetchProfile();
-  console.log("this is user:", user);
+  console.log(" =================>", user);
   const profile =
     "https://d326fntlu7tb1e.cloudfront.net/uploads/b5065bb8-4c6b-4eac-a0ce-86ab0f597b1e-vinci_04.jpg";
   const bkImg =
@@ -224,13 +223,13 @@ const Profile = ({ navigation }) => {
             onPress={() => navigation.navigate("showVendorsPage")}
           />
 
-<RegistrationTile
+          <RegistrationTile
             heading={"Shop Details"}
             desc={"Vendor Shop Detail"}
             onPress={() => navigation.navigate("shopDetails")}
           />
 
-            {/* <Text
+          {/* <Text
                 style={styles.registration}
                 onPress={() => {
                   navigation.navigate("shopDetails");
